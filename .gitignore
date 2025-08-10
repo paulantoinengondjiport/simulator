@@ -35,6 +35,7 @@
 *.out
 *.app
 simulator
+bin
 
 ### CMake ###
 CMakeLists.txt.user
