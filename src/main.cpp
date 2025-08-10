@@ -16,6 +16,12 @@ int main() {
     window.setPosition(sf::Vector2i(0, 0));  // Adjust coordinates as needed
     window.setFramerateLimit(60);
 
+    // Setting up FPS count
+    sf::Font font("./font/arial.ttf");
+    sf::Text fpsCount = sf::Text(font, "", sf::Text::Bold);
+    fpsCount.setPosition({0,0});
+    fpsCount.setCharacterSize(XSIZE/50);
+    fpsCount.setFillColor(sf::Color::White);
 
     auto mousePos = sf::Mouse::getPosition(window);
     // Creating the simulation environment
@@ -65,11 +71,15 @@ int main() {
         // Render
         window.clear();
 
+
         environment.draw(window);
+        window.draw(fpsCount);
         window.display();
 
-        float frameTime = clock.getElapsedTime().asMilliseconds();
-        std::cout << "Frame time: " << frameTime << " ms\n";
+        // FPS counter
+        int framePerSecond = 1000000 / clock.getElapsedTime().asMicroseconds();
+        fpsCount.setString("FPS: " + std::to_string(framePerSecond));
+
 
     }
 
