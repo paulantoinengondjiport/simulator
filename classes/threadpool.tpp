@@ -2,6 +2,7 @@
 // Created by paula on 8/10/2025.
 //
 #pragma once
+#include "threadpool.h"
 
 inline ThreadPool::ThreadPool(unsigned int num_threads) {
     for (unsigned int i = 0; i < num_threads; i++ ) {

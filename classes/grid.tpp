@@ -2,6 +2,7 @@
 // Created by paula on 8/8/2025.
 //
 #pragma once
+#include "grid.h"
 
 template <typename T>
 Grid<T>::Grid(unsigned short width, unsigned short height, T fillerData) {

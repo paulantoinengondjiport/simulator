@@ -2,6 +2,8 @@
 // Created by paula on 8/7/2025.
 //
 #pragma once
+#include "particle.h"
+
 inline void Particle::draw(sf::RenderWindow &window) const {
     if (this->element != ELEMENT::VOID){
         window.draw(this->visual);
@@ -100,3 +102,6 @@ inline void Particle::setY(int posY) {
     this->posY = posY;
 }
 
+inline bool Particle::hasBeenProcessed() {
+    return this->processed_check;
+}

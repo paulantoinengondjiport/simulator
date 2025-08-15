@@ -3,6 +3,8 @@
 // Created by paula on 8/7/2025.
 //
 #pragma once
+#include "environment.h"
+
 inline Environment::Environment(unsigned short width,unsigned short height, unsigned short posX, unsigned short posY): grid(width,height, Particle()) {
 
     this->width = width;
