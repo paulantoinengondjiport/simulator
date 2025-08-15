@@ -1,9 +1,9 @@
 //
 // Created by paula on 8/10/2025.
 //
-#include "threadpool.h"
+#pragma once
 
-ThreadPool::ThreadPool(unsigned int num_threads) {
+inline ThreadPool::ThreadPool(unsigned int num_threads) {
     for (unsigned int i = 0; i < num_threads; i++ ) {
         this->threads.emplace_back([this] { // Lambda function using this attributes
             while (true) {
@@ -30,7 +30,7 @@ ThreadPool::ThreadPool(unsigned int num_threads) {
     }
 }
 
-ThreadPool::~ThreadPool() {
+inline ThreadPool::~ThreadPool() {
     {
         std::unique_lock<std::mutex> lock(this->queue_mutex); // The queue is locked to safely set the stop flag
         this->stop = true;
@@ -44,7 +44,7 @@ ThreadPool::~ThreadPool() {
 }
 
 
-void ThreadPool::enqueue(std::function<void()> task)
+inline void ThreadPool::enqueue(std::function<void()> task)
 {
     {
         std::unique_lock<std::mutex> lock(this->queue_mutex); // A lock object is created locking the mutex

@@ -26,14 +26,18 @@ int main() {
     auto mousePos = sf::Mouse::getPosition(window);
     // Creating the simulation environment
     Environment environment = Environment(XSIZE/SCALE,YSIZE/SCALE,0,0);
+    unsigned int yStart = 0;
+    unsigned int yEnd = (YSIZE / SCALE);
+    unsigned int xStart = 0;
+    unsigned int xEnd = (XSIZE / SCALE);
 
     sf::Clock clock;
-    unsigned int number_of_threads = 1; //BROKEN DO NOT SET NUMBER OF THREADS OTHER THAN 1
+    unsigned int number_of_threads = 5;
     ThreadPool pool = ThreadPool(number_of_threads);
 
-    unsigned int grid_slice_length = static_cast<unsigned int>((XSIZE/static_cast<float>(SCALE)) * (YSIZE/static_cast<float>(SCALE))) / number_of_threads;
     // running window loop
     while (window.isOpen()) {
+        window.clear();
         // Checking events
 
         while (const std::optional event = window.pollEvent()) {
@@ -57,28 +61,38 @@ int main() {
 
         clock.restart();
 
-        for (int i = 0; i < number_of_threads; i++) { //ENVIRONMENT::update is not multithreading safe keep the thread numbers at 1
-            pool.enqueue([i,&environment, number_of_threads]() {
-                unsigned int yStart = ((YSIZE / SCALE) / number_of_threads) * i;
-                unsigned int yEnd = ((YSIZE / SCALE) / number_of_threads) * (i + 1);
-                unsigned int xStart = ((XSIZE / SCALE) / number_of_threads) * i;;
-                unsigned int xEnd = ((XSIZE / SCALE) / number_of_threads) * (i + 1);
-                environment.update(xStart, xEnd, yStart, yEnd);
-            });
-        }
+        // for (int i = 0; i < number_of_threads; i++) { //ENVIRONMENT::update is not multithreading safe keep the thread numbers at 1
+        //     pool.enqueue([i,&environment, number_of_threads]() {
+        //         unsigned int yStart = ((YSIZE / SCALE) / number_of_threads) * i;
+        //         unsigned int yEnd = ((YSIZE / SCALE) / number_of_threads) * (i + 1);
+        //         unsigned int xStart = ((XSIZE / SCALE) / number_of_threads) * i;;
+        //         unsigned int xEnd = ((XSIZE / SCALE) / number_of_threads) * (i + 1);
+        //         environment.update(xStart, xEnd, yStart, yEnd);
+        //     });
+        // }
+
+        pool.enqueue([&environment,xStart,xEnd,yStart,yEnd]() {
+
+            environment.update(xStart, xEnd, yStart, yEnd);
+        });
+
 
 
         // Render
-        window.clear();
+
 
 
         environment.draw(window);
         window.draw(fpsCount);
         window.display();
 
+        pool.enqueue([&clock,&fpsCount]() {
+            int framePerSecond = 1000000 / clock.getElapsedTime().asMicroseconds();
+            fpsCount.setString("FPS: " + std::to_string(framePerSecond));
+        });
+
         // FPS counter
-        int framePerSecond = 1000000 / clock.getElapsedTime().asMicroseconds();
-        fpsCount.setString("FPS: " + std::to_string(framePerSecond));
+
 
 
     }

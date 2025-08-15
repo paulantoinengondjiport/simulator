@@ -1,21 +1,25 @@
 //
 // Created by paula on 8/7/2025.
+// Created by paula on 8/7/2025.
 //
-#include "environment.h"
+#pragma once
+inline Environment::Environment(unsigned short width,unsigned short height, unsigned short posX, unsigned short posY): grid(width,height, Particle()) {
 
-
-#include "grid.h"
-#include "particle.h"
-#include <iostream>
-Environment::Environment(unsigned short width,unsigned short height, unsigned short posX, unsigned short posY) : grid(width,height){
     this->width = width;
     this->height = height;
     this->posX = posX;
     this->posY = posY;
+    Grid<Particle>::grid_iterator it = Grid<Particle>::grid_iterator(this->grid,0,0);
+    for (int i = 0; i < this->height; i++) {
+        for (int j = 0; j < this->width; j++) {
+            (*it) = Particle(j,i,ELEMENT::VOID,STATE::GAS);
+            ++it;
+        }
+    }
 }
 
-void Environment::draw(sf::RenderWindow &window){
-    Grid::grid_iterator iterator = Grid::grid_iterator(this->grid,0,0);
+inline void Environment::draw(sf::RenderWindow &window){
+    auto iterator = Grid<Particle>::grid_iterator(this->grid,0,0);
     for (int i = 0; i < this->width * this->height; i++) {
 
         (*iterator).draw(window);
@@ -24,8 +28,8 @@ void Environment::draw(sf::RenderWindow &window){
     }
 }
 
-void Environment::placeParticle(unsigned short posX, unsigned short posY, ELEMENT element) {
-    Grid::grid_iterator iterator = Grid::grid_iterator(this->grid,0,0);
+inline void Environment::placeParticle(unsigned short posX, unsigned short posY, ELEMENT element) {
+    Grid<Particle>::grid_iterator iterator = Grid<Particle>::grid_iterator(this->grid,0,0);
 
     for (int i = 0; i < posX + this->width * posY ; i++) {
         ++iterator;
@@ -34,44 +38,46 @@ void Environment::placeParticle(unsigned short posX, unsigned short posY, ELEMEN
     current_particle.transformInto(element);
 }
 
-bool Environment::isOnTop(const Particle &particle) const{
+inline bool Environment::isOnTop(const Particle &particle) const{
     return particle.getPosY() == 0;
 }
 
-bool Environment::isOnBottom(const Particle &particle) const {
+inline bool Environment::isOnBottom(const Particle &particle) const {
     return particle.getPosY() == this->height - 1;
 }
 
-bool Environment::isOnLeft(const Particle &particle) const{
+inline bool Environment::isOnLeft(const Particle &particle) const{
     return particle.getPosX() == 0;
 }
 
-bool Environment::isOnRight(const Particle& particle) const{
+inline bool Environment::isOnRight(const Particle& particle) const{
     return particle.getPosX() == this->width - 1;
 }
 
-void Environment::update(unsigned short xStart,unsigned short xEnd,unsigned short yStart,unsigned short yEnd) {
+inline void Environment::update(unsigned short xStart,unsigned short xEnd,unsigned short yStart,unsigned short yEnd) {
     unsigned int chunk_size = (yEnd-yStart) * width + (xEnd-xStart);
 
     this->updateSolidParticles(xStart,xEnd,yStart,yEnd);
 
-    auto update_iterator = Grid::grid_iterator(this->grid,0,0);
+
+
+    auto update_iterator = Grid<Particle>::grid_iterator(this->grid,0,0);
     for (int i = 0; i < chunk_size; i++) {
         (*update_iterator).resetUpdated();
         ++update_iterator;
     }
 }
 
-void Environment::updateSolidParticles(unsigned short xStart,unsigned short xEnd,unsigned short yStart,unsigned short yEnd) {
+inline void Environment::updateSolidParticles(unsigned short xStart,unsigned short xEnd,unsigned short yStart,unsigned short yEnd) {
     const int chunk_size = (yEnd-yStart) * width + (xEnd-xStart);
 
-    auto current_it = Grid::grid_iterator(this->grid,0,0);
-    auto scout_it = Grid::grid_iterator(current_it);
-    const Grid::grid_iterator end_it = current_it + chunk_size;
+    auto current_it = Grid<Particle>::grid_iterator(this->grid,0,0);
+    auto scout_it = Grid<Particle>::grid_iterator(current_it);
+    const Grid<Particle>::grid_iterator end_it = current_it + chunk_size;
     this->checkAndReplaceSolid(current_it,scout_it,end_it);
 }
 
-void Environment::checkAndReplaceSolid(Grid::grid_iterator &current_it, Grid::grid_iterator &scout_it, const Grid::grid_iterator &end_it) {
+inline void Environment::checkAndReplaceSolid(Grid<Particle>::grid_iterator &current_it, Grid<Particle>::grid_iterator &scout_it, const Grid<Particle>::grid_iterator &end_it) {
 
     while (current_it < end_it) {
         ELEMENT tmp_elem = (*current_it).getElement();

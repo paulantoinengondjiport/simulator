@@ -8,19 +8,19 @@
 #include "particle.h"
 
 
-
+template <typename T>
 class Grid {
     protected:
-    std::vector<Particle> data;
+    std::vector<T> data;
     unsigned short width;
     unsigned short height;
 
     public:
-    Grid(unsigned short width,unsigned short height);
+    Grid(unsigned short width, unsigned short height, T fillerData);
 
     class grid_iterator {
         public:
-        std::vector<Particle>::iterator iterator;
+        typename std::vector<T>::iterator iterator;
         grid_iterator(Grid &associated_grid, unsigned short posX,unsigned short posY);
         grid_iterator(const grid_iterator &other);
         void up();
@@ -30,7 +30,7 @@ class Grid {
         void operator++();
         void operator--();
         grid_iterator operator+(int amount) const;
-        Particle& operator*() const;
+        T& operator*() const;
         bool operator==(const grid_iterator &other) const;
         bool operator!=(const grid_iterator &other) const;
         bool operator<(const grid_iterator &other) const;
@@ -41,6 +41,5 @@ class Grid {
 
 };
 
-
-
+#include "grid.tpp"
 #endif //GRID_H

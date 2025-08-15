@@ -10,13 +10,14 @@
 
 #endif //ENVIRONMENT_H
 
+
 class Environment {
     private:
     unsigned short width;
     unsigned short height;
     unsigned short posX;
     unsigned short posY;
-    Grid grid;
+    Grid<Particle> grid;
 
     [[nodiscard]] bool isOnTop(const Particle &particle) const;
     [[nodiscard]] bool isOnBottom(const Particle &particle) const;
@@ -29,5 +30,7 @@ class Environment {
     void draw(sf::RenderWindow &window);
     void placeParticle(unsigned short posX, unsigned short posY, ELEMENT element);
     void update(unsigned short xStart,unsigned short xEnd,unsigned short yStart,unsigned short yEnd);
-    void checkAndReplaceSolid(Grid::grid_iterator &current_it, Grid::grid_iterator &scout_it, const Grid::grid_iterator &end_it);
+    void checkAndReplaceSolid(Grid<Particle>::grid_iterator &current_it, Grid<Particle>::grid_iterator &scout_it, const Grid<Particle>::grid_iterator &end_it);
 };
+
+#include "environment.tpp"

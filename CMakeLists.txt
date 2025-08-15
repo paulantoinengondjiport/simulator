@@ -14,7 +14,7 @@ set_target_properties(simulator PROPERTIES
         OUTPUT_NAME "simulator")
 
 #set_target_properties(simulator PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin" OUTPUT_NAME "simulator.bin") //Build in bin not compatible with IDE
-target_include_directories(simulator PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/")
+target_include_directories(simulator PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/include/" "${CMAKE_CURRENT_SOURCE_DIR}/classes/")
 
 target_link_libraries(simulator PRIVATE
         sfml-graphics
