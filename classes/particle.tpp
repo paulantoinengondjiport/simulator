@@ -102,6 +102,4 @@ inline void Particle::setY(int posY) {
     this->posY = posY;
 }
 
-inline bool Particle::hasBeenProcessed() {
-    return this->processed_check;
-}
+

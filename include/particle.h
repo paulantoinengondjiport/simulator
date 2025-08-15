@@ -49,6 +49,7 @@ class Particle {
     void setY(int posY);
 
 
+
 };
 
 #include "particle.tpp"
